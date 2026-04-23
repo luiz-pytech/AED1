@@ -9,34 +9,40 @@ type ArrayQueue struct {
 	size  int
 }
 
-func (queue *ArrayQueue) Init(size int) {
-	queue.v = make([]int, size)
-	queue.front = 0
-	queue.back = -1
-	queue.size = 0
-
-}
-
-func (queue *ArrayQueue) Enqueue(val int) {
-	if queue.size == len(queue.v)-1 {
-
+func (queue *ArrayQueue) Enqueue(val int) error {
+	if queue.size == len(queue.v) {
+		return errors.New("queue is full")
 	}
+
+	queue.back = (queue.back + 1) % len(queue.v)
+	queue.v[queue.back] = val
+	queue.size++
+
+	return nil
 }
 
 func (queue *ArrayQueue) Dequeue() (int, error) {
-	return -1, errors.New("error msg")
+	if queue.IsEmpty() {
+		return 0, errors.New("queue is empty")
+	}
+
+	val := queue.v[queue.front]
+	queue.front = (queue.front + 1) % len(queue.v)
+	queue.size--
+
+	return val, nil
 }
 
 func (queue *ArrayQueue) Front() (int, error) {
-	return -1, errors.New("error msg")
+	if queue.IsEmpty() {
+		return 0, errors.New("queue is empty")
+	}
+
+	return queue.v[queue.front], nil
 }
 
 func (queue *ArrayQueue) IsEmpty() bool {
-	if queue.size == 0 {
-		return true
-	}
-
-	return false
+	return queue.size == 0
 }
 
 func (queue *ArrayQueue) Size() int {
