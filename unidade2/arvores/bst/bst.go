@@ -147,7 +147,7 @@ func (node *BSTNode) Remove(val int) *BSTNode {
 		}
 		min := node.right.Min()
 		node.val = min
-		node.right = node.right.Remove(min)
+		node.right.Remove(min)
 	}
 
 	return node
